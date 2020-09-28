@@ -1,4 +1,5 @@
 ﻿using System;
+using Topshelf;
 
 namespace ConsoleTopShelf
 {
@@ -6,7 +7,13 @@ namespace ConsoleTopShelf
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            HostFactory.Run(x =>
+            {
+                x.Service<LoggingService>();
+                x.EnableServiceRecovery(r => r.RestartService(TimeSpan.FromSeconds(10)));
+                x.SetServiceName("TestService");
+                x.StartAutomatically();
+            });
         }
     }
 }
