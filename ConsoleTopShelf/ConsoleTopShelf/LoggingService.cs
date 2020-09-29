@@ -38,7 +38,7 @@ namespace ConsoleTopShelf
                 process.StartInfo.Verb = "runas";
                 process.Start();
                 //Vamos a la ruta
-                process.StandardInput.WriteLine("cd " + @"C:\Users\ENZO\source\repos\WorkServiceTopshelf\ConsoleTopShelf\ConsoleTopShelf\bin\Release\netcoreapp3.1\win-x64\publish");
+                process.StandardInput.WriteLine("cd " + @"C:\Program Files (x86)\ENZO\Setup1\ConsoleTopShelf.exe");
                 //Creamos
                 process.StandardInput.WriteLine("ConsoleTopShelf.exe install");
                 Console.WriteLine("Se creo workservice");
@@ -70,7 +70,7 @@ namespace ConsoleTopShelf
                     process.StartInfo.UseShellExecute = false;
                     process.Start();
                     //Vamos a la ruta
-                    process.StandardInput.WriteLine("cd " + @"C:\Users\ENZO\source\repos\WorkServiceTopshelf\ConsoleTopShelf\ConsoleTopShelf\bin\Release\netcoreapp3.1\win-x64\publish");
+                    process.StandardInput.WriteLine("cd " + @"C:\Program Files (x86)\ENZO\Setup1\ConsoleTopShelf.exe");
                     //Creamos
                     process.StandardInput.WriteLine("ConsoleTopShelf.exe start");
                     Console.WriteLine("Se inicio");
