@@ -1,31 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.ServiceProcess;
-using System.Text;
-using Topshelf;
+using System.Timers;
 
 namespace ConsoleTopShelf
 {
-    class LoggingService : ServiceControl
+    public class LoggingService
     {
-        private const string _logFileLocation = @"C:\Users\ENZO\Documents\servicelog.txt";
-
-        private void Log(string logMessage)
+        private readonly Timer _timer;
+        
+        public LoggingService()
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(_logFileLocation));
-            File.AppendAllText(_logFileLocation, DateTime.UtcNow.ToString() + " : " + logMessage + Environment.NewLine);
+            _timer = new Timer(5000.0) { AutoReset = true };
+            _timer.Elapsed += ExecuteService;
         }
 
-
-        public bool Start(HostControl hostControl)
+        private void ExecuteService(object sender, ElapsedEventArgs args)
         {
             //Revisa si esta instalado el workservice
-            ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "TestService");
+            ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "PruebaService");
+            ServiceController sc = new ServiceController("PruebaService");
             if (ctl == null)
             {
                 //Proceso para ejecutar consola como cmd
@@ -38,7 +34,7 @@ namespace ConsoleTopShelf
                 process.StartInfo.Verb = "runas";
                 process.Start();
                 //Vamos a la ruta
-                process.StandardInput.WriteLine("cd " + @"C:\Program Files (x86)\ENZO\Setup1\ConsoleTopShelf.exe");
+                process.StandardInput.WriteLine("cd " + @"C:\Program Files (x86)\"+Environment.UserName+@"\Setup1");
                 //Creamos
                 process.StandardInput.WriteLine("ConsoleTopShelf.exe install");
                 Console.WriteLine("Se creo workservice");
@@ -48,18 +44,17 @@ namespace ConsoleTopShelf
                 process.StandardInput.Close();
                 Console.WriteLine(process.StandardOutput.ReadToEnd());
 
-                ServiceController sc = new ServiceController("TestService");
-                    
-                if(sc.Status == ServiceControllerStatus.Running)
+
+                if (sc.Status == ServiceControllerStatus.Running)
                 {
                     Log("Starting");
                 }
 
             }
             else
-            { 
-                //Revisa si el workservice se esta ejecutando
-                if (IsOS(OS_ANYSERVER) == false)
+            {
+                //Revisa si el workservice se esta detenido
+                if (sc.Status == ServiceControllerStatus.Stopped)
                 {
                     //Proceso para ejecutar consola como cmd
                     Process process = new Process();
@@ -70,35 +65,55 @@ namespace ConsoleTopShelf
                     process.StartInfo.UseShellExecute = false;
                     process.Start();
                     //Vamos a la ruta
-                    process.StandardInput.WriteLine("cd " + @"C:\Program Files (x86)\ENZO\Setup1\ConsoleTopShelf.exe");
+                    process.StandardInput.WriteLine("cd " + @"C:\Program Files (x86)\"+Environment.UserName+@"\Setup1");
                     //Creamos
                     process.StandardInput.WriteLine("ConsoleTopShelf.exe start");
                     Console.WriteLine("Se inicio");
                     process.StandardInput.Flush();
                     process.StandardInput.Close();
                     Console.WriteLine(process.StandardOutput.ReadToEnd());
-
-                    ServiceController sc = new ServiceController("TestService");
-
+                    
                     if (sc.Status == ServiceControllerStatus.Running)
                     {
                         Log("Starting");
                     }
                 }
+                else if (sc.Status == ServiceControllerStatus.Running)
+                {
+                    Log("Starting");
+                }
             }
 
-            return true;
+            try
+            {
+                _timer.Stop();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Something went wrong:"+ ex.Message );
+            }
+            finally
+            {
+                _timer.Start();
+            }
         }
 
-        public bool Stop(HostControl hostControl)
+        //Escribe dentro de una archivo
+        private void Log(string logMessage)
         {
-            Log("Stopping");
-            return true;
+            Directory.CreateDirectory(Path.GetDirectoryName(@"C:\Users\" + Environment.UserName + @"\Documents\servicelog.txt"));
+            File.AppendAllText(@"C:\Users\" + Environment.UserName + @"\Documents\servicelog.txt", DateTime.UtcNow.ToString() + " : " + logMessage + Environment.NewLine);
         }
 
-        const int OS_ANYSERVER = 29;
+        public void Start()
+        {
+            _timer.Start();
+        }
 
-        [DllImport("shlwapi.dll", SetLastError = true, EntryPoint = "#437")]
-        public static extern bool IsOS(int os);
+        public void Stop()
+        {
+            _timer.Stop();
+        }
+
     }
 }

@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_E3EA8DF92B8A48F2A61F30DBD270FE2F"
+        "MsmKey" = "8:_D7E4361DB55444D1ABCC28949B7934F1"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -76,6 +76,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -165,7 +173,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Setup1"
         "ProductCode" = "8:{E7D90BA0-F604-4173-A3F6-D5426C226A99}"
-        "PackageCode" = "8:{4F3E4221-20F5-447A-AA8B-6B7C15014910}"
+        "PackageCode" = "8:{8EAC32F2-C045-418E-8A90-7AB07C90A8AD}"
         "UpgradeCode" = "8:{7EB5DFF7-460E-4B8C-9886-D44C8BBE08CE}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -684,7 +692,7 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E3EA8DF92B8A48F2A61F30DBD270FE2F"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D7E4361DB55444D1ABCC28949B7934F1"
             {
             "SourcePath" = "8:..\\ConsoleTopShelf\\obj\\Debug\\netcoreapp3.1\\ConsoleTopShelf.exe"
             "TargetName" = "8:"
