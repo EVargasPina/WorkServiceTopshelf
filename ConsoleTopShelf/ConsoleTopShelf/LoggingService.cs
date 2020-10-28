@@ -34,7 +34,8 @@ namespace ConsoleTopShelf
                 process.StartInfo.Verb = "runas";
                 process.Start();
                 //Vamos a la ruta
-                process.StandardInput.WriteLine("cd " + @"C:\Program Files (x86)\"+Environment.UserName+@"\Setup1");
+                //process.StandardInput.WriteLine("cd " + @"C:\Program Files (x86)\"+Environment.UserName+@"\Setup1");
+                process.StandardInput.WriteLine("cd " + @"C:\Users\ENZO\source\repos\WorkServiceTopshelf\ConsoleTopShelf\ConsoleTopShelf\bin\Release\netcoreapp3.1\publish");
                 //Creamos
                 process.StandardInput.WriteLine("ConsoleTopShelf.exe install");
                 Console.WriteLine("Se creo workservice");
@@ -45,10 +46,8 @@ namespace ConsoleTopShelf
                 Console.WriteLine(process.StandardOutput.ReadToEnd());
 
 
-                if (sc.Status == ServiceControllerStatus.Running)
-                {
-                    Log("Starting");
-                }
+                Log("Starting");
+               
 
             }
             else
@@ -65,7 +64,8 @@ namespace ConsoleTopShelf
                     process.StartInfo.UseShellExecute = false;
                     process.Start();
                     //Vamos a la ruta
-                    process.StandardInput.WriteLine("cd " + @"C:\Program Files (x86)\"+Environment.UserName+@"\Setup1");
+                    process.StandardInput.WriteLine("cd " + @"C:\Users\ENZO\source\repos\WorkServiceTopshelf\ConsoleTopShelf\ConsoleTopShelf\bin\Release\netcoreapp3.1\publish");
+                    // process.StandardInput.WriteLine("cd " + @"C:\Program Files (x86)\"+Environment.UserName+@"\Setup1");
                     //Creamos
                     process.StandardInput.WriteLine("ConsoleTopShelf.exe start");
                     Console.WriteLine("Se inicio");
@@ -73,15 +73,17 @@ namespace ConsoleTopShelf
                     process.StandardInput.Close();
                     Console.WriteLine(process.StandardOutput.ReadToEnd());
                     
-                    if (sc.Status == ServiceControllerStatus.Running)
+                    /*if (sc.Status == ServiceControllerStatus.Running)
                     {
                         Log("Starting");
-                    }
-                }
-                else if (sc.Status == ServiceControllerStatus.Running)
-                {
+                    }*/
                     Log("Starting");
                 }
+                /*else if (sc.Status == ServiceControllerStatus.Running)
+                {
+                    Log("Starting");
+                }*/
+                    Log("Starting");
             }
 
             try
