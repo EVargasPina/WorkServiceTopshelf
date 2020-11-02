@@ -13,11 +13,11 @@ namespace ConsoleTopShelf
         
         public LoggingService()
         {
-            _timer = new Timer(5000.0) { AutoReset = true };
-            _timer.Elapsed += ExecuteService;
+            _timer = new Timer(3000) { AutoReset = true };
+            _timer.Elapsed += TimerElapsed;
         }
 
-        private void ExecuteService(object sender, ElapsedEventArgs args)
+        private void TimerElapsed(object sender, ElapsedEventArgs args)
         {
             //Revisa si esta instalado el workservice
             ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "PruebaService");
@@ -35,22 +35,16 @@ namespace ConsoleTopShelf
                 process.Start();
                 //Vamos a la ruta
                 //process.StandardInput.WriteLine("cd " + @"C:\Program Files (x86)\"+Environment.UserName+@"\Setup1");
-                process.StandardInput.WriteLine("cd " + @"C:\Users\ENZO\source\repos\WorkServiceTopshelf\ConsoleTopShelf\ConsoleTopShelf\bin\Release\netcoreapp3.1\publish");
-                //Creamos
+              //  process.StandardInput.WriteLine("cd " + @"C:\Users\ENZO\source\repos\WorkServiceTopshelf\ConsoleTopShelf\ConsoleTopShelf\bin\Debug\netcoreapp3.1");
+                process.StandardInput.WriteLine("cd " + @"C:\Users\ENZO\source\repos\WorkServiceTopshelf\ConsoleTopShelf\ConsoleTopShelf\bin\Debug\netcoreapp3.1");
+                //Iniciamos
                 process.StandardInput.WriteLine("ConsoleTopShelf.exe install");
-                Console.WriteLine("Se creo workservice");
                 process.StandardInput.WriteLine("ConsoleTopShelf.exe start");
-                Console.WriteLine("Se inicio");
                 process.StandardInput.Flush();
                 process.StandardInput.Close();
                 Console.WriteLine(process.StandardOutput.ReadToEnd());
-
-
-                Log("Starting");
-               
-
             }
-            else
+           /* else
             {
                 //Revisa si el workservice se esta detenido
                 if (sc.Status == ServiceControllerStatus.Stopped)
@@ -64,7 +58,7 @@ namespace ConsoleTopShelf
                     process.StartInfo.UseShellExecute = false;
                     process.Start();
                     //Vamos a la ruta
-                    process.StandardInput.WriteLine("cd " + @"C:\Users\ENZO\source\repos\WorkServiceTopshelf\ConsoleTopShelf\ConsoleTopShelf\bin\Release\netcoreapp3.1\publish");
+                    process.StandardInput.WriteLine("cd " + @"C:\Users\ENZO\source\repos\WorkServiceTopshelf\ConsoleTopShelf\ConsoleTopShelf\bin\Debug\netcoreapp3.1");
                     // process.StandardInput.WriteLine("cd " + @"C:\Program Files (x86)\"+Environment.UserName+@"\Setup1");
                     //Creamos
                     process.StandardInput.WriteLine("ConsoleTopShelf.exe start");
@@ -72,40 +66,35 @@ namespace ConsoleTopShelf
                     process.StandardInput.Flush();
                     process.StandardInput.Close();
                     Console.WriteLine(process.StandardOutput.ReadToEnd());
-                    
-                    /*if (sc.Status == ServiceControllerStatus.Running)
-                    {
-                        Log("Starting");
-                    }*/
-                    Log("Starting");
-                }
-                /*else if (sc.Status == ServiceControllerStatus.Running)
-                {
-                    Log("Starting");
-                }*/
-                    Log("Starting");
-            }
 
-            try
-            {
-                _timer.Stop();
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine("Something went wrong:"+ ex.Message );
-            }
-            finally
-            {
-                _timer.Start();
-            }
+                    if (sc.Status == ServiceControllerStatus.Running)
+                    {
+                        Log();
+                    }
+                    Log();
+                }
+                else if (sc.Status == ServiceControllerStatus.Running)
+                {
+                    Log();
+                }
+                Log();
+            }*/          
+            Log();
         }
 
         //Escribe dentro de una archivo
-        private void Log(string logMessage)
+        private void Log()
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(@"C:\Users\" + Environment.UserName + @"\Documents\servicelog.txt"));
-            File.AppendAllText(@"C:\Users\" + Environment.UserName + @"\Documents\servicelog.txt", DateTime.UtcNow.ToString() + " : " + logMessage + Environment.NewLine);
+            string[] lines = new string[] { DateTime.Now.ToString() };
+            File.AppendAllLines(@"C:\Users\ENZO\Documents\servicelog.txt", lines);
         }
+
+        public static string GetCurrentUser()
+        {
+            string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+            return userName.Remove(0, Environment.MachineName.Length + 1);
+        }
+
 
         public void Start()
         {

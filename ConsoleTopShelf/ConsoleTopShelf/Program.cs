@@ -10,7 +10,7 @@ namespace ConsoleTopShelf
         {
             try
             {
-                HostFactory.Run(configurarion =>
+                var exitCode = HostFactory.Run(configurarion =>
                 {
                     configurarion.Service<LoggingService>(s =>
                     {
@@ -22,12 +22,15 @@ namespace ConsoleTopShelf
                     configurarion.SetServiceName("PruebaService");
                     configurarion.SetDisplayName("PruebaService");
                     configurarion.SetDescription("Hola");
-                    configurarion.StartAutomaticallyDelayed();
+                    configurarion.StartAutomatically();
                     configurarion.EnableServiceRecovery(recoveryOption =>
                     {
-                        recoveryOption.RestartService(0);
+                        recoveryOption.RestartComputer(2,"Hubo un error se va a reiniciar el equipo");
                     });
                 });
+
+                int exitCodeValue = (int)Convert.ChangeType(exitCode, exitCode.GetTypeCode());
+                Environment.ExitCode = exitCodeValue;
             }
             catch(Exception ex)
             {
